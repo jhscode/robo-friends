@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import CardList from './CardList';
 import Header from './Header';
+import '../styles/App.css'
 
 import { robots } from '../robots';
 

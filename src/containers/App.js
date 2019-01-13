@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import CardList from './CardList';
-import Header from './Header';
-import Scroll from './Scroll';
+import CardList from '../components/CardList';
+import Header from '../components/Header';
+import Scroll from '../components/Scroll';
 import '../styles/App.css'
 
 import 'tachyons';
@@ -15,8 +15,9 @@ class App extends Component {
   }
 
   async componentDidMount() {
+    // use axios to make api call. changed componentdidmount to async await
     const resp = await axios.get('https://www.hatchways.io/api/assessment/students');
-    console.log(resp);
+    // update state from the promise return and parsed by axios
     this.setState({ robots: resp.data.students });
   }
 
@@ -28,22 +29,22 @@ class App extends Component {
   }
 
   render() {
-    const filterRobots = this.state.robots.filter(robot => {
-      return robot.firstName.toLowerCase().includes(this.state.searchField.toLowerCase());
+    const { robots, searchField } = this.state;
+    const filterRobots = robots.filter(robot => {
+      return robot.firstName.toLowerCase().includes(searchField.toLowerCase());
     });
-    if (this.state.robots.length === 0) {
-      return <h1>Loading...</h1>;
-    } else {
-      return (
+    return ( 
+      !robots.length ? 
+      <h1>Loading...</h1> :
+      (
         <div className="tc">
           <Header onSearchChange={this.onSearchChange}/>
           <Scroll>
             <CardList robots={filterRobots} />
           </Scroll>
         </div>
-      );
-    }
-
+      )
+    );
   }
 }
 

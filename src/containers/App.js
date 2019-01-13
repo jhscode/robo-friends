@@ -4,6 +4,7 @@ import axios from 'axios';
 import CardList from '../components/CardList';
 import Header from '../components/Header';
 import Scroll from '../components/Scroll';
+import ErrorBoundary from '../components/ErrorBoundary';
 import '../styles/App.css'
 
 import 'tachyons';
@@ -40,7 +41,9 @@ class App extends Component {
         <div className="tc">
           <Header onSearchChange={this.onSearchChange}/>
           <Scroll>
-            <CardList robots={filterRobots} />
+            <ErrorBoundary>
+              <CardList robots={filterRobots} />
+            </ErrorBoundary>
           </Scroll>
         </div>
       )

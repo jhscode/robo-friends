@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import CardList from './CardList';
 import Header from './Header';
+import Scroll from './Scroll';
 import '../styles/App.css'
 
 import 'tachyons';
@@ -36,7 +37,9 @@ class App extends Component {
       return (
         <div className="tc">
           <Header onSearchChange={this.onSearchChange}/>
-          <CardList robots={filterRobots} />
+          <Scroll>
+            <CardList robots={filterRobots} />
+          </Scroll>
         </div>
       );
     }

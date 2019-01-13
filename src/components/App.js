@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 import CardList from './CardList';
 import Header from './Header';
 import '../styles/App.css'
 
-import { robots } from '../robots';
-
 import 'tachyons';
 
 class App extends Component {
-
   state = {
-    robots,
+    robots: [],
     searchField: ''
+  }
+
+  async componentDidMount() {
+    const resp = await axios.get('https://www.hatchways.io/api/assessment/students');
+    console.log(resp);
+    this.setState({ robots: resp.data.students });
   }
 
   onSearchChange = (event) => {
@@ -23,17 +27,20 @@ class App extends Component {
   }
 
   render() {
-
     const filterRobots = this.state.robots.filter(robot => {
-      return robot.name.toLowerCase().includes(this.state.searchField.toLowerCase());
+      return robot.firstName.toLowerCase().includes(this.state.searchField.toLowerCase());
     });
+    if (this.state.robots.length === 0) {
+      return <h1>Loading...</h1>;
+    } else {
+      return (
+        <div className="tc">
+          <Header onSearchChange={this.onSearchChange}/>
+          <CardList robots={filterRobots} />
+        </div>
+      );
+    }
 
-    return (
-      <div className="tc">
-        <Header onSearchChange={this.onSearchChange}/>
-        <CardList robots={filterRobots} />
-      </div>
-    );
   }
 }
 

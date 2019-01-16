@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import axios from 'axios';
 
 import CardList from '../components/CardList';
@@ -6,13 +7,24 @@ import Header from '../components/Header';
 import Scroll from '../components/Scroll';
 import ErrorBoundary from '../components/ErrorBoundary';
 import '../styles/App.css'
+import { setSearchField } from '../actions';
 
-import 'tachyons';
+
+const mapStateToProps = state => {
+  return {
+    searchField: state.searchField
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onSearchChange: (event) => dispatch(setSearchField(event.target.value))
+  }
+}
 
 class App extends Component {
   state = {
     robots: [],
-    searchField: ''
   }
 
   async componentDidMount() {
@@ -22,15 +34,9 @@ class App extends Component {
     this.setState({ robots: resp.data.students });
   }
 
-  onSearchChange = (event) => {
-    this.setState ({
-      searchField: event.target.value
-    });
-
-  }
-
   render() {
-    const { robots, searchField } = this.state;
+    const { robots } = this.state;
+    const { searchField, onSearchChange } = this.props;
     const filterRobots = robots.filter(robot => {
       return robot.firstName.toLowerCase().includes(searchField.toLowerCase());
     });
@@ -39,7 +45,7 @@ class App extends Component {
       <h1>Loading...</h1> :
       (
         <div className="tc">
-          <Header onSearchChange={this.onSearchChange}/>
+          <Header onSearchChange={onSearchChange}/>
           <Scroll>
             <ErrorBoundary>
               <CardList robots={filterRobots} />
@@ -51,4 +57,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
